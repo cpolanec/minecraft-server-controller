@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "minecraft-server-controller"
+version = "0.1.0"
+description = "API for interacting with Minecraft servers"
+authors = ["cpolanec <cpolanec@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "~3.8"
+boto3 = "~1.14"
+mcrcon = "^0.6"
+
+[tool.poetry.dev-dependencies]
+autopep8 = "^1.5"
+aws-sam-cli = "~1.15"
+flake8 = "^3.8"
+pydocstyle = "^5.1"
+pylint = "^2.6"
+pytest = "^6.2"
+pytest-cov = "^2.10"
+pytest-sugar = "^0.9"
+requests = "^2.23"
+rope = "^0.18"
+
+[tool.pylint.master]
+init-hook="import sys; sys.path.append('src')"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov-report term-missing"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

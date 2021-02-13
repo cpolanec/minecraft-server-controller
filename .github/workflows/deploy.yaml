@@ -1,0 +1,99 @@
+name: deploy
+on:
+  push:
+    branches: ['**']
+    tags-ignore: ['v*']
+    paths-ignore: ['**.md', 'LICENSE']
+
+env:
+  AWS_REGION: us-east-1
+  S3_DEPLOYMENT_BUCKET: ${{ secrets.AWS_DEPLOYMENT_BUCKET }}
+  CLOUDFORMATION_ROLE_ARN: ${{ secrets.AWS_CLOUDFORMATION_ROLE_ARN }}
+  FUNCTION_ROLE_ARN: ${{ secrets.AWS_FUNCTION_ROLE_ARN }}
+  HOSTED_ZONE_ID: ${{ secrets.AWS_HOSTED_ZONE_ID }}
+  CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
+
+jobs:
+  init:
+    #
+    # establish environment variables based on the current branch
+    # (see project README for further explanation of the environment variables)
+    #
+    name: init env variables
+    runs-on: ubuntu-latest
+
+    outputs:
+      environment: ${{ steps.setenv.outputs.environment }}
+      stack_name: ${{ steps.setenv.outputs.stack_name }}
+      api_subdomain: ${{ steps.setenv.outputs.api_subdomain }}
+
+    steps:
+      - name: Set environment variables based on git branch
+        id: setenv
+        run: |
+          if [[ "${{github.ref}}" == "refs/heads/main" ]]; then
+            echo "::set-output name=environment::main"
+            echo "::set-output name=stack_name::minecraft-main-controller"
+            echo "::set-output name=api_subdomain::api"
+          else
+            echo "::set-output name=environment::test"
+            echo "::set-output name=stack_name::minecraft-test-controller"
+            echo "::set-output name=api_subdomain::api-test"
+          fi
+
+  deploy:
+    #
+    # deploy all changes
+    #
+    name: deploy application
+    runs-on: ubuntu-latest
+    needs: init
+
+    env:
+      ENVIRONMENT: ${{ needs.init.outputs.environment }}
+      STACK_NAME: ${{ needs.init.outputs.stack_name }}
+      API_DOMAIN_NAME: ${{ format('{0}.{1}', needs.init.outputs.api_subdomain, secrets.API_ROOT_DOMAIN) }}
+
+    steps:
+      - name: Checkout git repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Setup Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.7
+
+      - name: Install Poetry tool for Python
+        uses: abatilo/actions-poetry@v2.1.0
+        with:
+          poetry-version: 1.1.4
+
+      - name: Initialize project workspace
+        run: make init
+
+      - name: Validate changes (lint and unit test)
+        run: |
+          make lint
+          make unittest
+
+      - name: Deploy changes to AWS account
+        run: make deploy
+
+      - name: Validate 'main' env with end-to-end tests
+        if: ${{ github.ref == 'refs/heads/main' }}
+        env:
+          API_KEY: ${{ secrets.API_MAIN_KEY }}
+        run: make e2etest
+
+      - name: Validate 'test' env with end-to-end tests
+        if: ${{ github.ref != 'refs/heads/main' }}
+        env:
+          API_KEY: ${{ secrets.API_TEST_KEY }}
+        run: make e2etest

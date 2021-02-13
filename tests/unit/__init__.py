@@ -1,0 +1,1 @@
+"""Initialization of package resources."""

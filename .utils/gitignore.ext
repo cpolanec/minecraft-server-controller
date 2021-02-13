@@ -1,0 +1,9 @@
+
+# Additions to generated content from gitignore.io
+
+### AWS-related files ###
+.aws-sam/
+*.iam.json
+**/requirements.txt
+
+# End of additions to generated content from gitignore.io

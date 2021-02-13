@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: |
+  Application for controlling the state of Minecraft game servers
+
+Parameters:
+  Environment:
+    Type: String
+    Description: Environment name will be appended to resource names
+  FunctionRole:
+    Type: String
+    NoEcho: true
+    Description: IAM role used in execution of Lambda functions
+  ApiDomainName:
+    Type: String
+    NoEcho: true
+    Description: Domain within an existing hosted zone for pretty URL configuration
+  CertificateArn:
+    Type: String
+    NoEcho: true
+    Description: ARN of an existing AWS managed certificate that supports the API domain
+  HostedZoneId:
+    Type: String
+    NoEcho: true
+    Description: Hosted Zone ID for the domain defined in 'ApiDomainName'
+
+Globals:
+  Function:
+    Runtime: python3.8
+    Timeout: 10
+    Tags:
+      Application: minecraft
+      Environment: !Ref Environment
+
+Resources:
+  # ---------------------------------------------
+  #
+  # API Gateway definition
+  #
+
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Domain:
+        DomainName: !Ref ApiDomainName
+        CertificateArn: !Ref CertificateArn
+        Route53:
+          HostedZoneId: !Ref HostedZoneId
+      StageName: !Ref Environment
+      OpenApiVersion: 3.0.1
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          UsagePlanName: !Sub minecraft-${Environment}-usage-plan
+          CreateUsagePlan: PER_API
+          Throttle:
+            RateLimit: 10
+            BurstLimit: 10
+          Quota:
+            Limit: 1000
+            Period: DAY
+          Tags:
+            - Key: Application
+              Value: minecraft
+            - Key: Environment
+              Value: !Ref Environment
+      MethodSettings:
+        - HttpMethod: '*'
+          ResourcePath: '/*'
+          ThrottlingRateLimit: 10
+          ThrottlingBurstLimit: 10
+      Tags:
+        Application: minecraft
+        Environment: !Ref Environment
+
+  # ---------------------------------------------
+  #
+  # /servers operations
+  #
+
+  GetServersOperation:
+    Type: AWS::Serverless::Function
+    DependsOn: ServersOperationsLogs
+    Properties:
+      FunctionName: !Sub minecraft-${Environment}-get-servers
+      CodeUri: src/
+      Handler: servers.get_operation
+      Role: !Ref FunctionRole
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /servers
+            Method: get
+
+  # https://github.com/aws/serverless-application-model/issues/851
+  ServersOperationsLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-get-servers
+      RetentionInDays: 30
