@@ -85,7 +85,7 @@ Resources:
     Properties:
       FunctionName: !Sub minecraft-${Environment}-get-servers
       CodeUri: src/
-      Handler: servers.get_operation
+      Handler: mcservers.get_handler
       Role: !Ref FunctionRole
       Events:
         ApiEvent:

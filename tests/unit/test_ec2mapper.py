@@ -1,6 +1,7 @@
-"""Unit testing for servers module."""
+"""Unit testing for 'ec2mapper' module."""
+
 import pytest
-import servers
+import ec2mapper
 
 
 @pytest.fixture(name='inst_jenny')
@@ -11,6 +12,7 @@ def fixture_inst_jenny():
         'State': {
             'Name': 'stopped'
         },
+        'PublicIpAddress': '10.11.12.13',
         'Tags': [{
             'Key': 'Name',
             'Value': 'minecraft-main-server-jenny'
@@ -29,47 +31,50 @@ def fixture_srvr_jenny():
         'FullName': 'minecraft-main-server-jenny',
         'Environment': 'main',
         'InstanceId': '8675309',
-        'State': 'stopped'
+        'State': 'stopped',
+        'PublicIpAddress': '10.11.12.13'
     }
 
 
 def test_get_server_names():
     """Test get_server_names() function."""
-    assert servers.get_server_name([]) == ''
-    assert servers.get_server_name([{}]) == ''
-    assert servers.get_server_name([{'Key': 'Name'}]) == ''
-    assert servers.get_server_name([{'Key': 'Name', 'Value': ''}]) == ''
-    assert servers.get_server_name(
+    assert ec2mapper.get_server_name([]) == ''
+    assert ec2mapper.get_server_name([{}]) == ''
+    assert ec2mapper.get_server_name([{'Key': 'Name'}]) == ''
+    assert ec2mapper.get_server_name([{'Key': 'Name', 'Value': ''}]) == ''
+    assert ec2mapper.get_server_name(
         [{'Key': 'Name', 'Value': 'foo-bar'}]) == 'foo-bar'
 
 
 def test_get_environment():
     """Test get_server_names() function."""
-    assert servers.get_environment([]) == ''
-    assert servers.get_environment([{}]) == ''
-    assert servers.get_environment([{'Key': 'Environment'}]) == ''
-    assert servers.get_server_name([{'Key': 'Environment', 'Value': ''}]) == ''
-    assert servers.get_environment(
+    assert ec2mapper.get_environment([]) == ''
+    assert ec2mapper.get_environment([{}]) == ''
+    assert ec2mapper.get_environment([{'Key': 'Environment'}]) == ''
+    assert ec2mapper.get_server_name(
+        [{'Key': 'Environment', 'Value': ''}]) == ''
+    assert ec2mapper.get_environment(
         [{'Key': 'Environment', 'Value': 'test'}]) == 'test'
 
 
 def test_map_instance(inst_jenny, srvr_jenny):
     """Test map_instance() function."""
-    assert servers.map_instance({}) == {
+    assert ec2mapper.map_instance({}) == {
         'Name': '',
         'FullName': '',
         'Environment': '',
         'InstanceId': '',
-        'State': ''
+        'State': '',
+        'PublicIpAddress': ''
     }
-    assert servers.map_instance(inst_jenny) == srvr_jenny
+    assert ec2mapper.map_instance(inst_jenny) == srvr_jenny
 
 
 def test_process_instance_data(inst_jenny, srvr_jenny):
     """Test process_instance_data() function."""
-    assert servers.process_instance_data({}) == []
-    assert servers.process_instance_data({'Reservations': []}) == []
-    assert servers.process_instance_data({
+    assert ec2mapper.parse({}) == []
+    assert ec2mapper.parse({'Reservations': []}) == []
+    assert ec2mapper.parse({
         'Reservations': [{
             'Instances': [inst_jenny]
         }]
