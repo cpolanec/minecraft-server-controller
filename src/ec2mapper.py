@@ -21,7 +21,7 @@ def parse(reservations):
 
 def map_instance(instance):
     """Map AWS EC2 instance data to response message format."""
-    logger.debug('instance = %s', pprint.pp(instance))
+    logger.debug('instance = %s', pprint.pformat(instance))
     tags = instance.get('Tags', [])
     full_name = get_server_name(tags)
     return {

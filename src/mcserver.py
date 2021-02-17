@@ -10,22 +10,19 @@ logger.setLevel(logging.INFO)
 
 
 def get_handler(event, context):  # pylint: disable=unused-argument
-    """Get Minecraft game server data.
+    """REST API GET method to get data about a Minecraft game server.
 
     Parameters
     ----------
     event: dict, required
         API Event Input Format
-        https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
 
     context: object, required
         Lambda Context runtime methods and attributes
-        https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
 
     Returns
     -------
-    API Gateway Lambda Proxy Output Format: dict
-    https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
+    API Gateway Lambda Output Format: dict
     """
     # retrieve short name for server from path parameters
     name = event.get('pathParameters', {}).get('name')

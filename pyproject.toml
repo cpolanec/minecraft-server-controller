@@ -26,6 +26,9 @@ rope = "^0.18"
 [tool.pylint.master]
 init-hook="import sys; sys.path.append('src')"
 
+[tool.pylint.similarities]
+ignore-imports = "yes"
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "--cov-report term-missing"
