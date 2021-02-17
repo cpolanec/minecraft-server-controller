@@ -12,7 +12,9 @@ mcrcon = "^0.6"
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5"
 aws-sam-cli = "~1.15"
+cryptography = "<3.4"
 flake8 = "^3.8"
+moto = "^1.3"
 pydocstyle = "^5.1"
 pylint = "^2.6"
 pytest = "^6.2"
@@ -23,6 +25,9 @@ rope = "^0.18"
 
 [tool.pylint.master]
 init-hook="import sys; sys.path.append('src')"
+
+[tool.pylint.similarities]
+ignore-imports = "yes"
 
 [tool.pytest.ini_options]
 minversion = "6.0"

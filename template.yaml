@@ -85,7 +85,7 @@ Resources:
     Properties:
       FunctionName: !Sub minecraft-${Environment}-get-servers
       CodeUri: src/
-      Handler: servers.get_operation
+      Handler: mcservers.get_handler
       Role: !Ref FunctionRole
       Events:
         ApiEvent:
@@ -100,4 +100,32 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-get-servers
+      RetentionInDays: 30
+
+  # ---------------------------------------------
+  #
+  # /servers/{name} operations
+  #
+
+  GetServerOperation:
+    Type: AWS::Serverless::Function
+    DependsOn: ServerOperationsLogs
+    Properties:
+      FunctionName: !Sub minecraft-${Environment}-get-server
+      CodeUri: src/
+      Handler: mcserver.get_handler
+      Role: !Ref FunctionRole
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /servers/{name}
+            Method: get
+
+  # https://github.com/aws/serverless-application-model/issues/851
+  ServerOperationsLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-get-server
       RetentionInDays: 30
