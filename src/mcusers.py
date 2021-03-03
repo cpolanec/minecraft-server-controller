@@ -43,7 +43,7 @@ def gather(name):
 
     # get IP address of the game server for login
     server = mcserver.gather(name)
-    address = server.get('PublicIpAddress')
+    address = server.get('publicIpAddress')
     if address is None or address == '':
         logger.error('could not find public IP address for %s', name)
         return users

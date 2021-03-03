@@ -27,12 +27,12 @@ def fixture_inst_jenny():
 def fixture_srvr_jenny():
     """Define example server data: Jenny."""
     return {
-        'Name': 'jenny',
-        'FullName': 'minecraft-main-server-jenny',
-        'Environment': 'main',
-        'InstanceId': '8675309',
-        'State': 'stopped',
-        'PublicIpAddress': '10.11.12.13'
+        'name': 'jenny',
+        'fullName': 'minecraft-main-server-jenny',
+        'environment': 'main',
+        'instanceId': '8675309',
+        'state': 'stopped',
+        'publicIpAddress': '10.11.12.13'
     }
 
 
@@ -60,12 +60,12 @@ def test_get_environment():
 def test_map_instance(inst_jenny, srvr_jenny):
     """Test map_instance() function."""
     assert ec2mapper.map_instance({}) == {
-        'Name': '',
-        'FullName': '',
-        'Environment': '',
-        'InstanceId': '',
-        'State': '',
-        'PublicIpAddress': ''
+        'name': '',
+        'fullName': '',
+        'environment': '',
+        'instanceId': '',
+        'state': '',
+        'publicIpAddress': ''
     }
     assert ec2mapper.map_instance(inst_jenny) == srvr_jenny
 
