@@ -1,10 +1,12 @@
 {
   "httpMethod": "GET",
-  "path": "/servers",
+  "path": "/servers/dream",
+  "headers": {},
   "body": "",
   "isBase64Encoded": false,
-  "headers": {},
-  "pathParameters": {},
+  "pathParameters": {
+    "name": "dream"
+  },
   "queryStringParameters": {},
   "stageVariables": {}
 }

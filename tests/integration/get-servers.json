@@ -1,0 +1,10 @@
+{
+  "httpMethod": "GET",
+  "path": "/servers",
+  "headers": {},
+  "body": "",
+  "isBase64Encoded": false,
+  "pathParameters": {},
+  "queryStringParameters": {},
+  "stageVariables": {}
+}

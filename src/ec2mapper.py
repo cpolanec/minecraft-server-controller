@@ -25,12 +25,12 @@ def map_instance(instance):
     tags = instance.get('Tags', [])
     full_name = get_server_name(tags)
     return {
-        'Name': full_name.split('-')[-1],
-        'FullName': full_name,
-        'Environment': get_environment(tags),
-        'InstanceId': instance.get('InstanceId', ''),
-        'State': instance.get('State', {}).get('Name', ''),
-        'PublicIpAddress': instance.get('PublicIpAddress', '')
+        'name': full_name.split('-')[-1],
+        'fullName': full_name,
+        'environment': get_environment(tags),
+        'instanceId': instance.get('InstanceId', ''),
+        'state': instance.get('State', {}).get('Name', ''),
+        'publicIpAddress': instance.get('PublicIpAddress', '')
     }
 
 

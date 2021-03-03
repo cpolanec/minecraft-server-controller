@@ -8,6 +8,7 @@ authors = ["cpolanec <cpolanec@users.noreply.github.com>"]
 python = "~3.8"
 boto3 = "~1.14"
 mcrcon = "^0.6"
+parse = "^1.19"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5"

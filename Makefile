@@ -120,7 +120,6 @@ lint: | init
 
 #
 # project unit testing rule
-#	* see tests/unit/pytest.ini for more configuration
 #
 unittest: | init
 	$(call header)
@@ -142,6 +141,35 @@ $(sam-dir): $(venv-dir) template.yaml $(src-py-files)
 	$(call prompt)
 	touch $@
 dist: $(sam-dir)
+
+#
+# project integration testing rule
+#
+inttest: | init dist
+	$(call header)
+	$(call prompt)
+	poetry run sam local invoke minecraft-local-get-servers \
+		--event tests/integration/get-servers.json \
+		--parameter-overrides "\
+			ParameterKey=Environment,ParameterValue=local \
+			ParameterKey=FunctionRole,ParameterValue=${FUNCTION_ROLE_ARN} \
+		" \
+		| jq -r '.body'
+	poetry run sam local invoke minecraft-local-get-server \
+		--event tests/integration/get-servers-dream.json \
+		--parameter-overrides "\
+			ParameterKey=Environment,ParameterValue=local \
+			ParameterKey=FunctionRole,ParameterValue=${FUNCTION_ROLE_ARN} \
+		" \
+		| jq -r '.body'
+	poetry run sam local invoke minecraft-local-get-users \
+		--event tests/integration/get-users.json \
+		--parameter-overrides "\
+			ParameterKey=Environment,ParameterValue=local \
+			ParameterKey=FunctionRole,ParameterValue=${FUNCTION_ROLE_ARN} \
+		" \
+		| jq -r '.body'
+		
 
 #
 # deploy the application to AWS
