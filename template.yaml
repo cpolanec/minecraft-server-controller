@@ -81,7 +81,7 @@ Resources:
 
   GetServersOperation:
     Type: AWS::Serverless::Function
-    DependsOn: ServersOperationsLogs
+    DependsOn: GetServersOperationLogs
     Properties:
       FunctionName: !Sub minecraft-${Environment}-get-servers
       CodeUri: src/
@@ -96,7 +96,7 @@ Resources:
             Method: get
 
   # https://github.com/aws/serverless-application-model/issues/851
-  ServersOperationsLogs:
+  GetServersOperationLogs:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-get-servers
@@ -109,7 +109,7 @@ Resources:
 
   GetServerOperation:
     Type: AWS::Serverless::Function
-    DependsOn: ServerOperationsLogs
+    DependsOn: GetServerOperationLogs
     Properties:
       FunctionName: !Sub minecraft-${Environment}-get-server
       CodeUri: src/
@@ -124,10 +124,33 @@ Resources:
             Method: get
 
   # https://github.com/aws/serverless-application-model/issues/851
-  ServerOperationsLogs:
+  GetServerOperationLogs:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-get-server
+      RetentionInDays: 30
+
+  PostServerOperation:
+    Type: AWS::Serverless::Function
+    DependsOn: PostServerOperationLogs
+    Properties:
+      FunctionName: !Sub minecraft-${Environment}-post-server
+      CodeUri: src/
+      Handler: mcserver.post_handler
+      Role: !Ref FunctionRole
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /servers/{name}
+            Method: post
+
+  # https://github.com/aws/serverless-application-model/issues/851
+  PostServerOperationLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-post-server
       RetentionInDays: 30
 
   # ---------------------------------------------
@@ -137,7 +160,7 @@ Resources:
 
   GetUsersOperation:
     Type: AWS::Serverless::Function
-    DependsOn: UsersOperationsLogs
+    DependsOn: GetUsersOperationLogs
     Properties:
       FunctionName: !Sub minecraft-${Environment}-get-users
       CodeUri: src/
@@ -152,7 +175,7 @@ Resources:
             Method: get
 
   # https://github.com/aws/serverless-application-model/issues/851
-  UsersOperationsLogs:
+  GetUsersOperationLogs:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-get-users
