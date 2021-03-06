@@ -18,12 +18,12 @@
             "Type": "Map",
             "ItemsPath": "$.servers",
             "Iterator": {
-                "StartAt": "CheckServer",
+                "StartAt": "CheckServerState",
                 "States": {
                     "Done": {
                         "Type": "Succeed"
                     },
-                    "CheckServer": {
+                    "CheckServerState": {
                         "Type": "Choice",
                         "Default": "Done",
                         "Choices": [
@@ -49,9 +49,9 @@
                             "users.$": "States.StringToJson($.Payload.body)"
                         },
                         "ResultPath": "$.results",
-                        "Next": "CheckUsers"
+                        "Next": "CheckUserCount"
                     },
-                    "CheckUsers": {
+                    "CheckUserCount": {
                         "Type": "Choice",
                         "Default": "Done",
                         "Choices": [

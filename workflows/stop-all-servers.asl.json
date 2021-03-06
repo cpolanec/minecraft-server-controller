@@ -1,0 +1,42 @@
+{
+    "StartAt": "GatherAllServers",
+
+    "States": {
+        "GatherAllServers": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Parameters": {
+                "FunctionName": "minecraft-${Environment}-get-servers"
+            },
+            "ResultSelector": {
+                "results.$": "States.StringToJson($.Payload.body)"
+            },
+            "OutputPath": "$.results",
+            "Next": "MapServers"
+        },
+        "MapServers": {
+            "Type": "Map",
+            "ItemsPath": "$.servers",
+            "Iterator": {
+                "StartAt": "StopServer",
+                "States": {
+                    "StopServer": {
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::lambda:invoke",
+                        "Parameters": {
+                            "FunctionName": "minecraft-${Environment}-post-server",
+                            "Payload": {
+                                "pathParameters": {
+                                    "name.$": "$.name"
+                                },
+                                "body": "{\"state\": \"stopped\"}"
+                            }
+                        },
+                        "End": true
+                    }
+                }
+            },
+            "End": true
+        }
+    }
+}

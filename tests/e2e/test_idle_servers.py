@@ -10,14 +10,14 @@ def test_idle_server_statemachine():
     stack_name = 'minecraft-{}-controller'.format(os.getenv('ENVIRONMENT'))
     stacks = cf_client.describe_stacks(StackName=stack_name)
 
-    # gather ARN for IdleServerStateMachine
+    # gather ARN for StopIdleServersWorkflow
     state_machine_arn = None
     stack_outputs = stacks['Stacks'][0]['Outputs']
     for output in stack_outputs:
-        if output['OutputKey'] == 'IdleServerStateMachineARN':
+        if output['OutputKey'] == 'StopIdleServersWorkflowARN':
             state_machine_arn = output['OutputValue']
 
-    # invoke the IdleServerStateMachine
+    # invoke the StopIdleServersWorkflow
     sfn_client = boto3.client('stepfunctions')
     response = sfn_client.start_execution(
         stateMachineArn=state_machine_arn

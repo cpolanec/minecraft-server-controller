@@ -34,8 +34,10 @@ Parameters:
     Description: Hosted Zone ID for the domain defined in 'ApiDomainName'
 
 Outputs:
-  IdleServerStateMachineARN:
-    Value: !GetAtt IdleServerStateMachine.Arn
+  StopAllServersWorkflowARN:
+    Value: !GetAtt StopAllServersWorkflow.Arn
+  StopIdleServersWorkflowARN:
+    Value: !GetAtt StopIdleServersWorkflow.Arn
 
 Conditions:
   IsMainConfig: !Equals [!Ref Environment, main]
@@ -51,26 +53,49 @@ Globals:
 Resources:
   # ---------------------------------------------
   #
-  # State Machine definition
+  # State Machine workflows
   #
 
-  IdleServerSchedule:
+  HourlyEventsSchedule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub minecraft-${Environment}-idleserver-schedule
+      Name: !Sub minecraft-${Environment}-hourly-events
       State: !If [IsMainConfig, ENABLED, DISABLED]
       ScheduleExpression: 'rate(1 hour)'
       Targets:
-        - Id: IdleServerStateMachine
-          Arn: !Ref IdleServerStateMachine
+        - Id: StopIdleServers
+          Arn: !Ref StopIdleServersWorkflow
+          RoleArn: !Ref EventBridgeRole
+  
+  NightlyEventsSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub minecraft-${Environment}-nightly-events
+      State: !If [IsMainConfig, ENABLED, DISABLED]
+      ScheduleExpression: 'cron(0 5 * * ? *)'
+      Targets:
+        - Id: StopAllServers
+          Arn: !Ref StopAllServersWorkflow
           RoleArn: !Ref EventBridgeRole
 
-  IdleServerStateMachine:
+  StopAllServersWorkflow:
     Type: AWS::Serverless::StateMachine
     Properties:
-      Name: !Sub minecraft-${Environment}-idle-servers
+      Name: !Sub minecraft-${Environment}-stopAllServers
       Role: !Ref StateMachineRole
-      DefinitionUri: statemachine/idle-servers.asl.json
+      DefinitionUri: workflows/stop-all-servers.asl.json
+      DefinitionSubstitutions:
+        Environment: !Ref Environment
+      Tags:
+        Application: minecraft
+        Environment: !Ref Environment
+
+  StopIdleServersWorkflow:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Name: !Sub minecraft-${Environment}-stopIdleServers
+      Role: !Ref StateMachineRole
+      DefinitionUri: workflows/stop-idle-servers.asl.json
       DefinitionSubstitutions:
         Environment: !Ref Environment
       Tags:
