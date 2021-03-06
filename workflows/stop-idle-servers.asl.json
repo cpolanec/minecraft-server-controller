@@ -1,0 +1,84 @@
+{
+    "StartAt": "GatherAllServers",
+
+    "States": {
+        "GatherAllServers": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Parameters": {
+                "FunctionName": "minecraft-${Environment}-get-servers"
+            },
+            "ResultSelector": {
+                "results.$": "States.StringToJson($.Payload.body)"
+            },
+            "OutputPath": "$.results",
+            "Next": "MapServers"
+        },
+        "MapServers": {
+            "Type": "Map",
+            "ItemsPath": "$.servers",
+            "Iterator": {
+                "StartAt": "CheckServerState",
+                "States": {
+                    "Done": {
+                        "Type": "Succeed"
+                    },
+                    "CheckServerState": {
+                        "Type": "Choice",
+                        "Default": "Done",
+                        "Choices": [
+                            {
+                                "Variable": "$.state",
+                                "StringEquals": "running",
+                                "Next": "GatherUsers"
+                            }
+                        ]
+                    },
+                    "GatherUsers": {
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::lambda:invoke",
+                        "Parameters": {
+                            "FunctionName": "minecraft-${Environment}-get-users",
+                            "Payload": {
+                                "pathParameters": {
+                                    "name.$": "$.name"
+                                }
+                            }
+                        },
+                        "ResultSelector": {
+                            "users.$": "States.StringToJson($.Payload.body)"
+                        },
+                        "ResultPath": "$.results",
+                        "Next": "CheckUserCount"
+                    },
+                    "CheckUserCount": {
+                        "Type": "Choice",
+                        "Default": "Done",
+                        "Choices": [
+                            {
+                                "Variable": "$.results.users.count",
+                                "NumericEquals": 0,
+                                "Next": "StopServer"
+                            }
+                        ]
+                    },
+                    "StopServer": {
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::lambda:invoke",
+                        "Parameters": {
+                            "FunctionName": "minecraft-${Environment}-post-server",
+                            "Payload": {
+                                "pathParameters": {
+                                    "name.$": "$.name"
+                                },
+                                "body": "{\"state\": \"stopped\"}"
+                            }
+                        },
+                        "End": true
+                    }
+                }
+            },
+            "End": true
+        }
+    }
+}

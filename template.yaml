@@ -12,6 +12,14 @@ Parameters:
     Type: String
     NoEcho: true
     Description: IAM role used in execution of Lambda functions
+  EventBridgeRole:
+    Type: String
+    NoEcho: true
+    Description: IAM role used in EventBridge rules
+  StateMachineRole:
+    Type: String
+    NoEcho: true
+    Description: IAM role used in StateMachine executions 
   ApiDomainName:
     Type: String
     NoEcho: true
@@ -25,6 +33,15 @@ Parameters:
     NoEcho: true
     Description: Hosted Zone ID for the domain defined in 'ApiDomainName'
 
+Outputs:
+  StopAllServersWorkflowARN:
+    Value: !GetAtt StopAllServersWorkflow.Arn
+  StopIdleServersWorkflowARN:
+    Value: !GetAtt StopIdleServersWorkflow.Arn
+
+Conditions:
+  IsMainConfig: !Equals [!Ref Environment, main]
+
 Globals:
   Function:
     Runtime: python3.8
@@ -34,6 +51,58 @@ Globals:
       Environment: !Ref Environment
 
 Resources:
+  # ---------------------------------------------
+  #
+  # State Machine workflows
+  #
+
+  HourlyEventsSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub minecraft-${Environment}-hourly-events
+      State: !If [IsMainConfig, ENABLED, DISABLED]
+      ScheduleExpression: 'rate(1 hour)'
+      Targets:
+        - Id: StopIdleServers
+          Arn: !Ref StopIdleServersWorkflow
+          RoleArn: !Ref EventBridgeRole
+  
+  NightlyEventsSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub minecraft-${Environment}-nightly-events
+      State: !If [IsMainConfig, ENABLED, DISABLED]
+      ScheduleExpression: 'cron(0 5 * * ? *)'
+      Targets:
+        - Id: StopAllServers
+          Arn: !Ref StopAllServersWorkflow
+          RoleArn: !Ref EventBridgeRole
+
+  StopAllServersWorkflow:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Name: !Sub minecraft-${Environment}-stopAllServers
+      Role: !Ref StateMachineRole
+      DefinitionUri: workflows/stop-all-servers.asl.json
+      DefinitionSubstitutions:
+        Environment: !Ref Environment
+      Tags:
+        Application: minecraft
+        Environment: !Ref Environment
+
+  StopIdleServersWorkflow:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Name: !Sub minecraft-${Environment}-stopIdleServers
+      Role: !Ref StateMachineRole
+      DefinitionUri: workflows/stop-idle-servers.asl.json
+      DefinitionSubstitutions:
+        Environment: !Ref Environment
+      Tags:
+        Application: minecraft
+        Environment: !Ref Environment
+
+
   # ---------------------------------------------
   #
   # API Gateway definition

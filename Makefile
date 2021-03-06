@@ -186,7 +186,9 @@ deploy: | init dist
 		--no-fail-on-empty-changeset \
 		--parameter-overrides "\
 			ParameterKey=Environment,ParameterValue=${ENVIRONMENT} \
+			ParameterKey=EventBridgeRole,ParameterValue=${EVENTBRIDGE_ROLE_ARN} \
 			ParameterKey=FunctionRole,ParameterValue=${FUNCTION_ROLE_ARN} \
+			ParameterKey=StateMachineRole,ParameterValue=${STATEMACHINE_ROLE_ARN} \
 			ParameterKey=ApiDomainName,ParameterValue=${API_DOMAIN_NAME} \
 			ParameterKey=HostedZoneId,ParameterValue=${HOSTED_ZONE_ID} \
 			ParameterKey=CertificateArn,ParameterValue=${CERTIFICATE_ARN} \
