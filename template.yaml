@@ -12,6 +12,14 @@ Parameters:
     Type: String
     NoEcho: true
     Description: IAM role used in execution of Lambda functions
+  EventBridgeRole:
+    Type: String
+    NoEcho: true
+    Description: IAM role used in EventBridge rules
+  StateMachineRole:
+    Type: String
+    NoEcho: true
+    Description: IAM role used in StateMachine executions 
   ApiDomainName:
     Type: String
     NoEcho: true
@@ -25,6 +33,13 @@ Parameters:
     NoEcho: true
     Description: Hosted Zone ID for the domain defined in 'ApiDomainName'
 
+Outputs:
+  IdleServerStateMachineARN:
+    Value: !GetAtt IdleServerStateMachine.Arn
+
+Conditions:
+  IsMainConfig: !Equals [!Ref Environment, main]
+
 Globals:
   Function:
     Runtime: python3.8
@@ -34,6 +49,35 @@ Globals:
       Environment: !Ref Environment
 
 Resources:
+  # ---------------------------------------------
+  #
+  # State Machine definition
+  #
+
+  IdleServerSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub minecraft-${Environment}-idleserver-schedule
+      State: !If [IsMainConfig, ENABLED, DISABLED]
+      ScheduleExpression: 'rate(1 hour)'
+      Targets:
+        - Id: IdleServerStateMachine
+          Arn: !Ref IdleServerStateMachine
+          RoleArn: !Ref EventBridgeRole
+
+  IdleServerStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Name: !Sub minecraft-${Environment}-idle-servers
+      Role: !Ref StateMachineRole
+      DefinitionUri: statemachine/idle-servers.asl.json
+      DefinitionSubstitutions:
+        Environment: !Ref Environment
+      Tags:
+        Application: minecraft
+        Environment: !Ref Environment
+
+
   # ---------------------------------------------
   #
   # API Gateway definition
