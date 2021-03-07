@@ -86,7 +86,13 @@ def gather(name):
     reservations = ec2_client.describe_instances(
         Filters=[
             {'Name': 'tag:Application', 'Values': ['minecraft']},
-            {'Name': 'tag:Name', 'Values': [main_name, test_name]}
+            {'Name': 'tag:Name', 'Values': [main_name, test_name]},
+            {'Name': 'instance-state-name',
+                'Values': [
+                    'pending', 'running',
+                    'shutting-down', 'stopping', 'stopped'
+                ]
+             }
         ]
     )
 
