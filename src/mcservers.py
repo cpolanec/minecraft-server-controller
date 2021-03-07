@@ -43,7 +43,13 @@ def gather():
     ec2_client = boto3.client("ec2")
     reservations = ec2_client.describe_instances(
         Filters=[
-            {'Name': 'tag:Application', 'Values': ['minecraft']}
+            {'Name': 'tag:Application', 'Values': ['minecraft']},
+            {'Name': 'instance-state-name',
+                'Values': [
+                    'pending', 'running',
+                    'shutting-down', 'stopping', 'stopped'
+                ]
+             }
         ]
     )
     servers = ec2mapper.parse(reservations)
