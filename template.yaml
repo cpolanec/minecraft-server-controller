@@ -117,7 +117,7 @@ Resources:
         Route53:
           HostedZoneId: !Ref HostedZoneId
       StageName: !Ref Environment
-      OpenApiVersion: 3.0.1
+      OpenApiVersion: 3.0.3
       Auth:
         ApiKeyRequired: true
         UsagePlan:
