@@ -38,7 +38,7 @@ venv-dir = .venv
 # configure goals
 #
 default: lint unittest dist
-.PHONY: .gitignore mostlyclean clean destroy init lint unittest dist deploy e2etest
+.PHONY: .gitignore mostlyclean clean destroy init diagrams lint unittest dist deploy e2etest
 
 #
 # create .gitignore file
@@ -101,6 +101,14 @@ $(src-pip-reqts): pyproject.toml poetry.lock
 init: $(venv-dir) $(src-pip-reqts)
 
 #
+# diagram generation rule
+#
+diagrams: | init
+	$(call header)
+	$(call prompt)
+	poetry run python3 docs/overview_diagram.py
+
+#
 # project linting rule
 # 	* find pyilnt errors (exit non-zero if found)
 # 	* list pylint warnings (exit zero always)
@@ -110,13 +118,13 @@ init: $(venv-dir) $(src-pip-reqts)
 lint: | init
 	$(call header)
 	$(call prompt)
-	poetry run pylint --errors-only src tests
+	poetry run pylint --errors-only src docs tests
 	$(call prompt)
-	poetry run pylint --exit-zero src tests
+	poetry run pylint --exit-zero src docs tests
 	$(call prompt)
-	poetry run flake8 --benchmark --count src tests
+	poetry run flake8 --benchmark --count src docs tests
 	$(call prompt)
-	poetry run pydocstyle --match='.*\.py' --count src tests
+	poetry run pydocstyle --match='.*\.py' --count src docs tests
 
 #
 # project unit testing rule
