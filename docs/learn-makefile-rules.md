@@ -6,6 +6,7 @@ This project leverages [GNU Make](https://www.gnu.org/software/make/manual/make.
 | ------------------ | ------------------------------------------------------------- |
 | `make [default]`   | Run the `lint`, `unittest`, and `dist` rules                  |
 | `make init`        | Initializes the Python virtual env                            |
+| `make deplock`     | Lock dependencies with `poetry.lock` file                     |
 | `make lint`        | Run linting tasks (e.g. pylint, flake8, etc.)                 |
 | `make unittest`    | Run the project unit tests                                    |
 | `make dist`        | Create the project distribution & binaries                    |

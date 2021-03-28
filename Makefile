@@ -38,7 +38,7 @@ venv-dir = .venv
 # configure goals
 #
 default: lint unittest dist
-.PHONY: .gitignore mostlyclean clean destroy init diagrams lint unittest dist deploy e2etest
+.PHONY: .gitignore mostlyclean clean destroy init deplock diagrams lint unittest dist deploy e2etest
 
 #
 # create .gitignore file
@@ -78,12 +78,6 @@ destroy:
 #
 # Poetry initialization rules
 #
-poetry.lock: pyproject.toml
-	$(call header)
-	$(call prompt)
-	poetry lock
-	$(call prompt)
-	touch $@
 $(venv-dir): poetry.lock
 	$(call header)
 	$(call prompt)
@@ -96,9 +90,15 @@ $(src-pip-reqts): pyproject.toml poetry.lock
 	poetry export -f requirements.txt > $@
 
 #
-# main initialization rule
+# initialization rules
 #
 init: $(venv-dir) $(src-pip-reqts)
+deplock:
+	$(call header)
+	$(call prompt)
+	poetry lock
+	$(call prompt)
+	touch $@
 
 #
 # diagram generation rule
