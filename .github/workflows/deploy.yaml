@@ -92,6 +92,11 @@ jobs:
           make lint
           make unittest
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          flags: unittest
+
       - name: Deploy changes to AWS account
         run: make deploy
 
