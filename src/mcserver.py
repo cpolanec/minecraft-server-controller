@@ -4,11 +4,12 @@ import json
 import logging
 import boto3
 import ec2mapper
+import myutils
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = myutils.get_logger(__name__, logging.INFO)
 
 
+@myutils.log_calls(level=logging.DEBUG)
 def get_handler(event, context):  # pylint: disable=unused-argument
     """REST API GET method to get data about a Minecraft game server.
 
@@ -24,11 +25,8 @@ def get_handler(event, context):  # pylint: disable=unused-argument
     -------
     API Gateway Lambda Output Format: dict
     """
-    # retrieve short name for server from path parameters
-    name = event.get('pathParameters', {}).get('name')
-    logger.debug('name = %s', name)
-
     # gather the server data
+    name = event.get('pathParameters', {}).get('name')
     server = gather(name)
 
     # return the HTTP payload
@@ -38,6 +36,7 @@ def get_handler(event, context):  # pylint: disable=unused-argument
     }
 
 
+@myutils.log_calls(level=logging.DEBUG)
 def post_handler(event, context):  # pylint: disable=unused-argument
     """REST API POST method to change a Minecraft game server.
 
@@ -53,16 +52,12 @@ def post_handler(event, context):  # pylint: disable=unused-argument
     -------
     API Gateway Lambda Output Format: dict
     """
-    # retrieve short name for server from path parameters
+    # gather the server data
     name = event.get('pathParameters', {}).get('name')
-    logger.debug('name = %s', name)
-
-    # retrieve POST body with proposed server changes
-    body = json.loads(event.get('body'))
-    logger.debug('body = %s', body)
+    server = gather(name)
 
     # review/change state of the server
-    server = gather(name)
+    body = json.loads(event.get('body'))
     change_server_state(server, body.get('state'))
 
     # gather latest server data for HTTP response
@@ -75,6 +70,7 @@ def post_handler(event, context):  # pylint: disable=unused-argument
     }
 
 
+@myutils.log_calls
 def gather(name):
     """Return a Minecraft game server data (by server short name)."""
     # format tag names from short name
@@ -100,6 +96,7 @@ def gather(name):
     return server
 
 
+@myutils.log_calls(level=logging.DEBUG)
 def process_ec2_data(reservations):
     """Gather and format Minecraft server data from AWS EC2 instances."""
     # map reservations to consolidated data model
@@ -116,6 +113,7 @@ def process_ec2_data(reservations):
     return server
 
 
+@myutils.log_calls
 def change_server_state(server, state):
     """Review state of the server."""
     ec2_client = boto3.client('ec2')
@@ -124,15 +122,12 @@ def change_server_state(server, state):
 
     new_state = None
     if state == 'running':
-        logger.info('%s: change state to "running"', server_name)
         resp = ec2_client.start_instances(InstanceIds=[instance_id])
         new_state = resp['StartingInstances'][0]['CurrentState']['Name']
     elif state == 'stopped':
-        logger.info('%s: change state to "stopped"', server_name)
         resp = ec2_client.stop_instances(InstanceIds=[instance_id])
         new_state = resp['StoppingInstances'][0]['CurrentState']['Name']
     elif state == 'rebooting':
-        logger.info('%s: change state to "rebooting"', server_name)
         resp = ec2_client.reboot_instances(InstanceIds=[instance_id])
         new_state = 'pending'
     else:

@@ -1,27 +1,26 @@
 """Helper methods for parsing EC2 instance data from AWS SDK."""
 
 import logging
-import pprint
+import myutils
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = myutils.get_logger(__name__, logging.INFO)
 
 
+@myutils.log_calls(level=logging.DEBUG)
 def parse(reservations):
     """Process raw EC2 instance data."""
     # consolidate the game server data
     servers = []
     for reservation in reservations.get('Reservations', []):
-        logger.debug('reservation = %s', reservation)
         servers.extend(
             map(map_instance, reservation.get('Instances', []))
         )
     return servers
 
 
+@myutils.log_calls(level=logging.DEBUG)
 def map_instance(instance):
     """Map AWS EC2 instance data to response message format."""
-    logger.debug('instance = %s', pprint.pformat(instance))
     tags = instance.get('Tags', [])
     full_name = get_server_name(tags)
     return {
