@@ -2,9 +2,10 @@
 
 Resources for managing a [Minecraft server farm](https://github.com/cpolanec/minecraft-server-farm) (e.g. getting server and user information, shutting down idle servers, etc.)
 
+[![deploy](https://github.com/cpolanec/minecraft-server-controller/actions/workflows/deploy.yaml/badge.svg)](https://github.com/cpolanec/minecraft-server-controller/actions/workflows/deploy.yaml)
+[![codecov](https://codecov.io/gh/cpolanec/minecraft-server-controller/branch/main/graph/badge.svg?token=JAYVP4Q1W8)](https://codecov.io/gh/cpolanec/minecraft-server-controller)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](code_of_conduct.md)
-[![deploy](https://github.com/cpolanec/minecraft-server-controller/actions/workflows/deploy.yaml/badge.svg)](https://github.com/cpolanec/minecraft-server-controller/actions/workflows/deploy.yaml)
 
 ## Overview
 
