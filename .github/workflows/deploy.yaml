@@ -1,9 +1,10 @@
 name: deploy
 on:
+  workflow_dispatch:
+    inputs: {}
   push:
     branches: ['**']
     tags-ignore: ['v*']
-    paths-ignore: ['**.md', 'LICENSE']
 
 env:
   AWS_REGION: us-east-1
