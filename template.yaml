@@ -86,9 +86,21 @@ Resources:
       DefinitionUri: workflows/stop-all-servers.asl.json
       DefinitionSubstitutions:
         Environment: !Ref Environment
+      Logging:
+        Level: ALL
+        IncludeExecutionData: true
+        Destinations:
+          - CloudWatchLogsLogGroup:
+              LogGroupArn: !GetAtt StopAllServersLogGroup.Arn 
       Tags:
         Application: minecraft
         Environment: !Ref Environment
+
+  StopAllServersLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/statemachine/minecraft-${Environment}-stopAllServers
+      RetentionInDays: 30
 
   StopIdleServersWorkflow:
     Type: AWS::Serverless::StateMachine
@@ -98,10 +110,21 @@ Resources:
       DefinitionUri: workflows/stop-idle-servers.asl.json
       DefinitionSubstitutions:
         Environment: !Ref Environment
+      Logging:
+        Level: ALL
+        IncludeExecutionData: true
+        Destinations:
+          - CloudWatchLogsLogGroup:
+              LogGroupArn: !GetAtt StopIdleServersLogGroup.Arn
       Tags:
         Application: minecraft
         Environment: !Ref Environment
 
+  StopIdleServersLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/statemachine/minecraft-${Environment}-stopIdleServers
+      RetentionInDays: 30
 
   # ---------------------------------------------
   #
