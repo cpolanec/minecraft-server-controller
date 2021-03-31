@@ -4,11 +4,12 @@ import json
 import logging
 import boto3
 import ec2mapper
+import myutils
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = myutils.get_logger(__name__, logging.INFO)
 
 
+@myutils.log_calls(level=logging.DEBUG)
 def get_handler(event, context):  # pylint: disable=unused-argument
     """REST API GET method to list Minecraft game servers.
 
@@ -24,8 +25,6 @@ def get_handler(event, context):  # pylint: disable=unused-argument
     -------
     API Gateway Lambda Output Format: dict
     """
-    logger.debug('event = %s', event)
-
     # gather data for HTTP response
     servers = gather()
 
@@ -38,6 +37,7 @@ def get_handler(event, context):  # pylint: disable=unused-argument
     }
 
 
+@myutils.log_calls
 def gather():
     """Return a list of Minecraft game servers."""
     ec2_client = boto3.client("ec2")

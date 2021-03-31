@@ -1,9 +1,10 @@
 name: deploy
 on:
+  workflow_dispatch:
+    inputs: {}
   push:
     branches: ['**']
     tags-ignore: ['v*']
-    paths-ignore: ['**.md', 'LICENSE']
 
 env:
   AWS_REGION: us-east-1
@@ -91,6 +92,11 @@ jobs:
         run: |
           make lint
           make unittest
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          flags: unittest
 
       - name: Deploy changes to AWS account
         run: make deploy

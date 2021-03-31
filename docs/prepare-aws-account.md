@@ -6,7 +6,7 @@ Follow these steps to complete the one-time setup of your [AWS account](https://
 
    - Role to permit CloudFormation to create the resources defined in the AWS SAM template
    - Role to permit Lambda functions to modify EC2 instance state, write to CloudWatch log streams, and get SSM parameters
-   - Role to permit Step Functions to invoke Lambda functions
+   - Role to permit Step Functions to invoke Lambda functions and write to CloudWatch logs streams
    - Role to permit CloudWatch events to execute Step Function state machines
 
 1. **Create IAM user for deployments.** Deploying the application will require the user to have the following permissions:

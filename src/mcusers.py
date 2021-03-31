@@ -6,11 +6,12 @@ import boto3
 import parse
 import mcrcon
 import mcserver
+import myutils
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = myutils.get_logger(__name__, logging.INFO)
 
 
+@myutils.log_calls(level=logging.DEBUG)
 def get_handler(event, context):  # pylint: disable=unused-argument
     """REST API GET method to list users on a Minecraft game server.
 
@@ -37,6 +38,7 @@ def get_handler(event, context):  # pylint: disable=unused-argument
     }
 
 
+@myutils.log_calls
 def gather(name):
     """Return data about the users on a Minecraft game server."""
     users = {}
@@ -65,6 +67,7 @@ def gather(name):
     return users
 
 
+@myutils.log_calls(level=logging.DEBUG)
 def parse_mcrcon_list(response):
     """Parse the mcrcon 'list' command response."""
     # set default values
