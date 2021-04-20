@@ -34,11 +34,35 @@ def test_gather():
         with mock.patch(
                 'mcusers.mcserver.gather',
                 return_value={}):
-            assert mcusers.gather('') == {}
+            users = mcusers.gather('')
+            assert users['count'] == 0
+            assert users['names'] == []
 
         with mock.patch(
                 'mcusers.mcserver.gather',
-                return_value={'publicIpAddress': '0.0.0.0'}):
+                return_value={
+                    'state': 'stopped',
+                    'publicIpAddress': '0.0.0.0'
+                }):
+            users = mcusers.gather('')
+            assert users['count'] == 0
+            assert users['names'] == []
+
+        with mock.patch(
+                'mcusers.mcserver.gather',
+                return_value={
+                    'state': 'running'
+                }):
+            users = mcusers.gather('')
+            assert users['count'] == 0
+            assert users['names'] == []
+
+        with mock.patch(
+                'mcusers.mcserver.gather',
+                return_value={
+                    'state': 'running',
+                    'publicIpAddress': '0.0.0.0'
+                }):
             users = mcusers.gather('')
             assert users['count'] == 0
             assert users['names'] == []
