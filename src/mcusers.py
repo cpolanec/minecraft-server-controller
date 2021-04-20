@@ -41,10 +41,17 @@ def get_handler(event, context):  # pylint: disable=unused-argument
 @myutils.log_calls
 def gather(name):
     """Return data about the users on a Minecraft game server."""
-    users = {}
+    users = {
+        'count': 0,
+        'names': []
+    }
+
+    server = mcserver.gather(name)
+    state = server.get('state')
+    if state is None or state != 'running':
+        return users
 
     # get IP address of the game server for login
-    server = mcserver.gather(name)
     address = server.get('publicIpAddress')
     if address is None or address == '':
         logger.error('could not find public IP address for %s', name)
