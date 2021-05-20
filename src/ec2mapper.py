@@ -22,21 +22,15 @@ def parse(reservations):
 def map_instance(instance):
     """Map AWS EC2 instance data to response message format."""
     tags = instance.get('Tags', [])
-    full_name = get_full_name(tags)
+    full_name = myutils.get_first('Name', tags)
     return {
         'name': get_short_name(full_name),
         'fullName': full_name,
-        'environment': get_environment(tags),
+        'environment': myutils.get_first('Environment', tags),
         'instanceId': instance.get('InstanceId', ''),
         'state': instance.get('State', {}).get('Name', ''),
         'publicIpAddress': instance.get('PublicIpAddress', '')
     }
-
-
-def get_full_name(tags):
-    """Retrieve full server name from AWS EC2 tags."""
-    names = list(filter(lambda d: d.get('Key') == 'Name', tags))
-    return names[0].get('Value', '') if len(names) > 0 else ''
 
 
 def get_short_name(full_name):
@@ -46,9 +40,3 @@ def get_short_name(full_name):
     else:
         name = full_name.split('-')[-1]
     return name
-
-
-def get_environment(tags):
-    """Retrieve environment from AWS EC2 tags."""
-    names = list(filter(lambda d: d.get('Key') == 'Environment', tags))
-    return names[0].get('Value', '') if len(names) > 0 else ''

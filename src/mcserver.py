@@ -11,20 +11,7 @@ logger = myutils.get_logger(__name__, logging.INFO)
 
 @myutils.log_calls(level=logging.DEBUG)
 def get_handler(event, context):  # pylint: disable=unused-argument
-    """REST API GET method to get data about a Minecraft game server.
-
-    Parameters
-    ----------
-    event: dict, required
-        API Event Input Format
-
-    context: object, required
-        Lambda Context runtime methods and attributes
-
-    Returns
-    -------
-    API Gateway Lambda Output Format: dict
-    """
+    """REST API GET method to get data about a Minecraft game server."""
     # gather the server data
     name = event.get('pathParameters', {}).get('name')
     server = gather(name)
@@ -38,20 +25,7 @@ def get_handler(event, context):  # pylint: disable=unused-argument
 
 @myutils.log_calls(level=logging.DEBUG)
 def post_handler(event, context):  # pylint: disable=unused-argument
-    """REST API POST method to change a Minecraft game server.
-
-    Parameters
-    ----------
-    event: dict, required
-        API Event Input Format
-
-    context: object, required
-        Lambda Context runtime methods and attributes
-
-    Returns
-    -------
-    API Gateway Lambda Output Format: dict
-    """
+    """REST API POST method to change a Minecraft game server."""
     # gather the server data
     name = event.get('pathParameters', {}).get('name')
     server = gather(name)
@@ -80,29 +54,18 @@ def gather(name):
     v2_test_name = 'mcservers-test-hosts/{}/instance'.format(name)
 
     # gather instance details from AWS
-    ec2_client = boto3.client('ec2')
-    reservations = ec2_client.describe_instances(
-        Filters=[
-            {
-                'Name': 'tag:Application',
-                'Values': ['minecraft', 'mcservers']
-            },
-            {
-                'Name': 'tag:Name',
-                'Values': [
-                    v1_main_name, v1_test_name,
-                    v2_main_name, v2_test_name
-                ]
-            },
-            {
-                'Name': 'instance-state-name',
-                'Values': [
-                    'pending', 'running',
-                    'shutting-down', 'stopping', 'stopped'
-                ]
-            }
+    filters = []
+    filters.append(myutils.get_application_filter())
+    filters.append(myutils.get_instance_filter())
+    filters.append({
+        'Name': 'tag:Name',
+        'Values': [
+            v1_main_name, v1_test_name,
+            v2_main_name, v2_test_name
         ]
-    )
+    })
+    ec2_client = boto3.client('ec2')
+    reservations = ec2_client.describe_instances(Filters=filters)
 
     server = process_ec2_data(reservations)
     return server

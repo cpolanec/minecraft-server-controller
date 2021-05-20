@@ -49,3 +49,28 @@ def log_calls(func=None, level=logging.INFO):
 
         return result
     return wrapper
+
+
+def get_application_filter():
+    """Return SDK filter to return Minecraft application resources."""
+    return {
+        'Name': 'tag:Application',
+        'Values': ['minecraft', 'mcservers']
+    }
+
+
+def get_instance_filter():
+    """Return SDK filter to return active EC2 instances."""
+    return {
+        'Name': 'instance-state-name',
+        'Values': [
+            'pending', 'running',
+            'shutting-down', 'stopping', 'stopped'
+        ]
+    }
+
+
+def get_first(key, tags):
+    """Return first tag value associated with the provided tag key."""
+    values = list(filter(lambda d: d.get('Key') == key, tags))
+    return values[0].get('Value', '') if len(values) > 0 else ''

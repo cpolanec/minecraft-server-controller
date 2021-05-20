@@ -40,21 +40,14 @@ def get_handler(event, context):  # pylint: disable=unused-argument
 @myutils.log_calls
 def gather():
     """Return a list of Minecraft game servers."""
-    ec2_client = boto3.client("ec2")
-    reservations = ec2_client.describe_instances(
-        Filters=[
-            {
-                'Name': 'tag:Application',
-                'Values': ['minecraft', 'mcservers']
-            },
-            {
-                'Name': 'instance-state-name',
-                'Values': [
-                    'pending', 'running',
-                    'shutting-down', 'stopping', 'stopped'
-                ]
-            }
-        ]
-    )
+    # initialize AWS SDK query filters
+    filters = []
+    filters.append(myutils.get_application_filter())
+    filters.append(myutils.get_instance_filter())
+
+    # invoke the AWS SDK to get relevant EC2 instances
+    ec2_client = boto3.client('ec2')
+    reservations = ec2_client.describe_instances(Filters=filters)
+
     servers = ec2mapper.parse(reservations)
     return servers
