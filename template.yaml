@@ -247,6 +247,63 @@ Resources:
 
   # ---------------------------------------------
   #
+  # /servers/{name}/snapshots operations
+  #
+
+  GetSnapshotsOperation:
+    Type: AWS::Serverless::Function
+    DependsOn: GetSnapshotsOperationLogs
+    Properties:
+      FunctionName: !Sub minecraft-${Environment}-get-snapshots
+      CodeUri: src/
+      Handler: mcsnapshots.get_handler
+      Role: !Ref FunctionRole
+      Events:
+        RootApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /snapshots
+            Method: get
+        ServerApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /servers/{name}/snapshots
+            Method: get
+  
+  # https://github.com/aws/serverless-application-model/issues/851
+  GetSnapshotsOperationLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-get-snapshots
+      RetentionInDays: 30
+
+  PostSnapshotOperation:
+    Type: AWS::Serverless::Function
+    DependsOn: PostSnapshotOperationLogs
+    Properties:
+      FunctionName: !Sub minecraft-${Environment}-post-snapshot
+      CodeUri: src/
+      Handler: mcsnapshots.post_handler
+      Role: !Ref FunctionRole
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /servers/{name}/snapshots
+            Method: post
+  
+  # https://github.com/aws/serverless-application-model/issues/851
+  PostSnapshotOperationLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/minecraft-${Environment}-post-snapshot
+      RetentionInDays: 30
+
+  # ---------------------------------------------
+  #
   # /servers/{name}/users operations
   #
 

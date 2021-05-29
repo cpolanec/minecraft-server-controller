@@ -36,33 +36,12 @@ def fixture_srvr_jenny():
     }
 
 
-def test_get_full_name():
-    """Test get_server_names() function."""
-    assert ec2mapper.get_full_name([]) == ''
-    assert ec2mapper.get_full_name([{}]) == ''
-    assert ec2mapper.get_full_name([{'Key': 'Name'}]) == ''
-    assert ec2mapper.get_full_name([{'Key': 'Name', 'Value': ''}]) == ''
-    assert ec2mapper.get_full_name(
-        [{'Key': 'Name', 'Value': 'foo-bar'}]) == 'foo-bar'
-
-
 def test_get_short_name():
     """Test get_server_names() function."""
     assert ec2mapper.get_short_name('') == ''
     assert ec2mapper.get_short_name('minecraft-test-foobar') == 'foobar'
     assert ec2mapper.get_short_name(
         'mcservers-test/foobar/instance') == 'foobar'
-
-
-def test_get_environment():
-    """Test get_environment() function."""
-    assert ec2mapper.get_environment([]) == ''
-    assert ec2mapper.get_environment([{}]) == ''
-    assert ec2mapper.get_environment([{'Key': 'Environment'}]) == ''
-    assert ec2mapper.get_environment(
-        [{'Key': 'Environment', 'Value': ''}]) == ''
-    assert ec2mapper.get_environment(
-        [{'Key': 'Environment', 'Value': 'test'}]) == 'test'
 
 
 def test_map_instance(inst_jenny, srvr_jenny):
