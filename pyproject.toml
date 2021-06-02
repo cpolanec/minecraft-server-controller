@@ -23,7 +23,7 @@ pytest = "^6.2"
 pytest-cov = "^2.10"
 pytest-sugar = "^0.9"
 requests = "^2.23"
-rope = "^0.18"
+rope = "^0.19"
 
 [tool.pylint.master]
 init-hook="import sys; sys.path.append('src')"
