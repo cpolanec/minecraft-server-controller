@@ -1,0 +1,49 @@
+name: ci
+on:
+  workflow_dispatch:
+    inputs: {}
+  push:
+    branches: ['**']
+    tags-ignore: ['v*']
+
+jobs:
+  validate:
+    #
+    # continuous integration (lint & unit test)
+    #
+    name: continuous integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout git repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.7
+
+      - name: Install Poetry tool for Python
+        uses: abatilo/actions-poetry@v2.1.2
+        with:
+          poetry-version: 1.1.4
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-${{ hashFiles('poetry.lock') }}
+          restore-keys: poetry-
+
+      - name: Initialize project workspace
+        run: make init
+
+      - name: Validate changes (lint and unit test)
+        run: |
+          make lint
+          make unittest
+
+      - name: Upload code coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          path: coverage.xml
