@@ -40,7 +40,7 @@ jobs:
 
       - name: Validate changes (lint and unit test)
         env:
-          AWS_REGION: us-east-1 # needed for moto
+          AWS_DEFAULT_REGION: us-east-1 # needed for moto
         run: |
           make lint
           make unittest
