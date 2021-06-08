@@ -1,7 +1,5 @@
 name: cd
 on:
-  workflow_dispatch:
-    inputs: {}
   workflow_run:
     workflows: ["ci"]
     types:
