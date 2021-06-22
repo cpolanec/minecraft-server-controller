@@ -31,9 +31,9 @@ jobs:
 
     # only allow 'pull_request_target' events for dependabot
     if: |
-      github.event_name != 'pull_request_target' 
-      || github.actor == 'dependabot[bot]'
-
+      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
+      || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
+      
     outputs:
       environment: ${{ steps.setenv.outputs.environment }}
       stack_name: ${{ steps.setenv.outputs.stack_name }}
@@ -63,8 +63,8 @@ jobs:
 
     # only allow 'pull_request_target' events for dependabot
     if: |
-      github.event_name != 'pull_request_target' 
-      || github.actor == 'dependabot[bot]'
+      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
+      || (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
 
     env:
       ENVIRONMENT: ${{ needs.init.outputs.environment }}
