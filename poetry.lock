@@ -314,7 +314,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*"
 
 [[package]]
 name = "diagrams"
-version = "0.19.1"
+version = "0.20.0"
 description = "Diagram as Code"
 category = "dev"
 optional = false
@@ -1167,7 +1167,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.8"
-content-hash = "d0e1d6dd08c308e6c908b9cc036ad8ab3486abd2c213ae88bf27ff66febe9a02"
+content-hash = "feb49f1e32114ebd93f1be73f6edb5f320ab18e55d267967faafc935905b6f5d"
 
 [metadata.files]
 arrow = [
@@ -1382,8 +1382,8 @@ decorator = [
     {file = "decorator-4.4.2.tar.gz", hash = "sha256:e3a62f0520172440ca0dcc823749319382e377f37f140a0b99ef45fecb84bfe7"},
 ]
 diagrams = [
-    {file = "diagrams-0.19.1-py3-none-any.whl", hash = "sha256:aeaea68b94992b8ff15c0a37aa31eb3b1d98903b366cf070f17863f693e34430"},
-    {file = "diagrams-0.19.1.tar.gz", hash = "sha256:bb77d8f7a502b1638dc3ca7b267c8e4689f56203b248590cbda3e5269f9ba659"},
+    {file = "diagrams-0.20.0-py3-none-any.whl", hash = "sha256:395391663b4d3f2d3e3614797402ca99494e00baf3926f5c9e72856d34cafedd"},
+    {file = "diagrams-0.20.0.tar.gz", hash = "sha256:a50743ed9274e194e7898820f69aa12868ae217003580ef9e7d0285132c9674a"},
 ]
 docker = [
     {file = "docker-4.2.2-py2.py3-none-any.whl", hash = "sha256:03a46400c4080cb6f7aa997f881ddd84fef855499ece219d75fbdb53289c17ab"},
