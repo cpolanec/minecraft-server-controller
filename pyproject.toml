@@ -12,7 +12,7 @@ parse = "^1.19"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5"
-aws-sam-cli = "~1.15"
+aws-sam-cli = "~1.24"
 cryptography = "<3.4"
 diagrams = "^0.20"
 flake8 = "^3.8"

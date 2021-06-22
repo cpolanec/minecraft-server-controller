@@ -57,7 +57,7 @@ toml = "*"
 
 [[package]]
 name = "aws-lambda-builders"
-version = "1.1.0"
+version = "1.4.0"
 description = "Python library to compile, build & package AWS Lambda functions for several runtimes & frameworks."
 category = "dev"
 optional = false
@@ -67,20 +67,20 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 six = ">=1.11,<2.0"
 
 [package.extras]
-dev = ["coverage (==4.3.4)", "pytest-cov (==2.4.0)", "pytest (==3.0.7)", "py (==1.4.33)", "mock (==2.0.0)", "parameterized (==0.6.1)", "backports.tempfile (==1.0)", "futures (==3.2.0)", "pathlib2 (==2.3.2)", "flake8 (==3.3.0)", "astroid (>=1.5.8,<2.1.0)", "pylint (==1.7.2)", "isort (>=4.2.5,<5)", "flake8 (==3.7.9)", "pylint (==2.4.4)"]
+dev = ["coverage (==5.3)", "pytest-cov (==2.10.1)", "parameterized (==0.7.4)", "futures (==3.2.0)", "pathlib2 (==2.3.2)", "astroid (>=1.6.0,<1.7.0)", "pylint (>=1.9.5,<1.10.0)", "pytest (>=4.6.11,<4.7.0)", "mock (==3.0.5)", "backports.tempfile (==1.0)", "flake8 (==3.3.0)", "isort (>=4.2.5,<5)", "pylint (>=2.6.0,<2.7.0)", "pytest (>=6.1.1)", "mock (==4.0.2)", "black (==20.8b1)", "flake8 (==3.8.4)"]
 
 [[package]]
 name = "aws-sam-cli"
-version = "1.15.0"
+version = "1.24.1"
 description = "AWS SAM CLI is a CLI tool for local development and testing of Serverless applications"
 category = "dev"
 optional = false
 python-versions = ">=3.6, <=4.0, !=4.0"
 
 [package.dependencies]
-aws-lambda-builders = "1.1.0"
-aws-sam-translator = "1.33.0"
-boto3 = ">=1.14.23,<1.15.0"
+aws-lambda-builders = "1.4.0"
+aws-sam-translator = "1.36.0"
+boto3 = ">=1.14,<2.0"
 chevron = ">=0.12,<1.0"
 click = ">=7.1,<8.0"
 cookiecutter = ">=1.7.2,<1.8.0"
@@ -88,19 +88,19 @@ dateparser = ">=0.7,<1.0"
 docker = ">=4.2.0,<4.3.0"
 Flask = ">=1.1.2,<1.2.0"
 jmespath = ">=0.10.0,<0.11.0"
-python-dateutil = ">=2.6,<2.8.1"
 PyYAML = ">=5.3,<6.0"
 requests = "2.23.0"
 serverlessrepo = "0.1.10"
 tomlkit = "0.7.0"
-watchdog = "0.10.3"
+watchdog = "2.1.2"
 
 [package.extras]
-dev = ["coverage (==5.3)", "pytest-cov (==2.10.1)", "pylint (>=2.6.0,<2.7.0)", "pytest (==6.1.1)", "parameterized (==0.7.4)", "pytest-xdist (==2.1.0)", "pytest-forked (==1.3.0)", "pytest-timeout (==1.4.2)", "pytest-rerunfailures (==9.1.1)", "black (==20.8b1)"]
+dev = ["pylint (>=2.6.0,<2.7.0)", "coverage (==5.3)", "pytest-cov (==2.10.1)", "mypy (==0.790)", "boto3-stubs[essential] (>=1.14,<2.0)", "pytest (==6.1.1)", "parameterized (==0.7.4)", "pytest-xdist (==2.1.0)", "pytest-forked (==1.3.0)", "pytest-timeout (==1.4.2)", "pytest-rerunfailures (==9.1.1)", "black (==20.8b1)"]
+pre-dev = ["pylint (>=2.6.0,<2.7.0)"]
 
 [[package]]
 name = "aws-sam-translator"
-version = "1.33.0"
+version = "1.36.0"
 description = "AWS SAM Translator is a library that transform SAM templates into AWS CloudFormation templates"
 category = "dev"
 optional = false
@@ -112,7 +112,7 @@ jsonschema = ">=3.2,<4.0"
 six = ">=1.15,<2.0"
 
 [package.extras]
-dev = ["coverage (>=5.3,<6.0)", "flake8 (>=3.8.4,<3.9.0)", "tox (>=3.20.1,<3.21.0)", "pytest-cov (>=2.10.1,<2.11.0)", "pylint (>=1.7.2,<2.0)", "pyyaml (>=5.3.1,<5.4.0)", "mock (>=3.0.5,<4.0.0)", "parameterized (>=0.7.4,<0.8.0)", "requests (>=2.24.0,<2.25.0)", "docopt (>=0.6.2,<0.7.0)", "pytest (>=4.6.11,<4.7.0)", "pytest (>=6.1.1,<6.2.0)", "black (==20.8b1)"]
+dev = ["coverage (>=5.3,<6.0)", "flake8 (>=3.8.4,<3.9.0)", "tox (>=3.20.1,<3.21.0)", "pytest-cov (>=2.10.1,<2.11.0)", "pylint (>=1.7.2,<2.0)", "pyyaml (>=5.3.1,<5.4.0)", "mock (>=3.0.5,<4.0.0)", "parameterized (>=0.7.4,<0.8.0)", "click (>=7.1,<8.0)", "dateparser (>=0.7,<1.0)", "requests (>=2.24.0,<2.25.0)", "docopt (>=0.6.2,<0.7.0)", "pathlib2 (>=2.3.5)", "pytest (>=4.6.11,<4.7.0)", "pytest (>=6.1.1,<6.2.0)", "black (==20.8b1)"]
 
 [[package]]
 name = "aws-xray-sdk"
@@ -686,14 +686,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "pathtools"
-version = "0.1.2"
-description = "File system general utilities"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "pluggy"
 version = "0.13.1"
 description = "plugin and hook calling mechanisms for python"
@@ -1101,14 +1093,11 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "watchdog"
-version = "0.10.3"
+version = "2.1.2"
 description = "Filesystem events monitoring"
 category = "dev"
 optional = false
-python-versions = "*"
-
-[package.dependencies]
-pathtools = ">=0.1.1"
+python-versions = ">=3.6"
 
 [package.extras]
 watchmedo = ["PyYAML (>=3.10)", "argh (>=0.24.1)"]
@@ -1167,7 +1156,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.8"
-content-hash = "feb49f1e32114ebd93f1be73f6edb5f320ab18e55d267967faafc935905b6f5d"
+content-hash = "7890d07c7e6be1f33ec744c30e891324b0d1c9ffe613a19fc2c8a411b66aa24c"
 
 [metadata.files]
 arrow = [
@@ -1191,18 +1180,18 @@ autopep8 = [
     {file = "autopep8-1.5.6.tar.gz", hash = "sha256:5454e6e9a3d02aae38f866eec0d9a7de4ab9f93c10a273fb0340f3d6d09f7514"},
 ]
 aws-lambda-builders = [
-    {file = "aws_lambda_builders-1.1.0-py2-none-any.whl", hash = "sha256:2c8d710c6a96dfd4abd0c4450872deab71fd38c7fd79e1be84e0a760f3992f7f"},
-    {file = "aws_lambda_builders-1.1.0-py3-none-any.whl", hash = "sha256:a5a68347fe348be7c79a48650a06685d6df690469e62a2e00c73e7ec5de8e69a"},
-    {file = "aws_lambda_builders-1.1.0.tar.gz", hash = "sha256:2b40a0003c2c05143e1aa816fed758c7d78f3e5c8e115be681aa2478f2655056"},
+    {file = "aws_lambda_builders-1.4.0-py2-none-any.whl", hash = "sha256:d32f79cf67b189a7598793f69797f284b2eb9a9fada562175b1e854187f95aed"},
+    {file = "aws_lambda_builders-1.4.0-py3-none-any.whl", hash = "sha256:3f885433bb71bae653b520e3cf4c31fe5f5b977cb770d42c631af155cd60fd2b"},
+    {file = "aws_lambda_builders-1.4.0.tar.gz", hash = "sha256:5d4e4ecb3d3290f0eec1f62b7b0d9d6b91160ae71447d95899eede392d05f75f"},
 ]
 aws-sam-cli = [
-    {file = "aws-sam-cli-1.15.0.tar.gz", hash = "sha256:a6d4b5fe77022c2259e305d7b0195820172fd15951c8d3f2c7675193a73b9f9f"},
-    {file = "aws_sam_cli-1.15.0-py3-none-any.whl", hash = "sha256:7399057ef0cabb477001cf87ebd51149df4853bb40094c1897436ba15a2288b6"},
+    {file = "aws-sam-cli-1.24.1.tar.gz", hash = "sha256:f07467ced32afb0489a416a8a963d0a8aa5d1821ecb07d2a6e8b91eff1561651"},
+    {file = "aws_sam_cli-1.24.1-py3-none-any.whl", hash = "sha256:49ff88f5fe492248c81171478a87515f1f2ae19eb987cc54c88f671cf6a93334"},
 ]
 aws-sam-translator = [
-    {file = "aws-sam-translator-1.33.0.tar.gz", hash = "sha256:9f3767614746a38300ee988ef70d6f862e71e59ea536252bbf9a319daaac1fff"},
-    {file = "aws_sam_translator-1.33.0-py2-none-any.whl", hash = "sha256:89c5c997164231b847634d8034d3534d3a048d88f4b66b2897f6251366e640f5"},
-    {file = "aws_sam_translator-1.33.0-py3-none-any.whl", hash = "sha256:505d18b0bad8702bfba80fc5bc78d9c4b003ab009a9e42648561bdf1fd67bf01"},
+    {file = "aws-sam-translator-1.36.0.tar.gz", hash = "sha256:fa1b990d9329d19052e7b91cf0b19371ed9d31a529054b616005884cd662b584"},
+    {file = "aws_sam_translator-1.36.0-py2-none-any.whl", hash = "sha256:4195ae8196f04803e7f0384a2b5ccd8c2b06ce0d8dc408aa1f1ce96c23bcf39d"},
+    {file = "aws_sam_translator-1.36.0-py3-none-any.whl", hash = "sha256:f7d51b661fe1f5613a882f4733d1c92eff4dac36a076eafd18031d209b178695"},
 ]
 aws-xray-sdk = [
     {file = "aws-xray-sdk-2.7.0.tar.gz", hash = "sha256:697c9068e84dd5d2c1456def3fd0865f226046b5db4db56d738050e425960adf"},
@@ -1567,9 +1556,6 @@ packaging = [
 parse = [
     {file = "parse-1.19.0.tar.gz", hash = "sha256:9ff82852bcb65d139813e2a5197627a94966245c897796760a3a2a8eb66f020b"},
 ]
-pathtools = [
-    {file = "pathtools-0.1.2.tar.gz", hash = "sha256:7c35c5421a39bb82e58018febd90e3b6e5db34c5443aaaf742b3f33d4655f1c0"},
-]
 pluggy = [
     {file = "pluggy-0.13.1-py2.py3-none-any.whl", hash = "sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"},
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
@@ -1800,7 +1786,23 @@ urllib3 = [
     {file = "urllib3-1.25.11.tar.gz", hash = "sha256:8d7eaa5a82a1cac232164990f04874c594c9453ec55eef02eab885aa02fc17a2"},
 ]
 watchdog = [
-    {file = "watchdog-0.10.3.tar.gz", hash = "sha256:4214e1379d128b0588021880ccaf40317ee156d4603ac388b9adcf29165e0c04"},
+    {file = "watchdog-2.1.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:581e3548159fe7d2a9f377a1fbcb41bdcee46849cca8ab803c7ac2e5e04ec77c"},
+    {file = "watchdog-2.1.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:edcd9ef3fd460bb8a98eb1fcf99941e9fd9f275f45f1a82cb1359ec92975d647"},
+    {file = "watchdog-2.1.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:d34ce2261f118ecd57eedeef95fc2a495fc4a40b3ed7b3bf0bd7a8ccc1ab4f8f"},
+    {file = "watchdog-2.1.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:668391e6c32742d76e5be5db6bf95c455fa4b3d11e76a77c13b39bccb3a47a72"},
+    {file = "watchdog-2.1.2-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:6ef9fe57162c4c361692620e1d9167574ba1975ee468b24051ca11c9bba6438e"},
+    {file = "watchdog-2.1.2-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:58ebb1095ee493008a7789d47dd62e4999505d82be89fc884d473086fccc6ebd"},
+    {file = "watchdog-2.1.2-py3-none-manylinux2014_aarch64.whl", hash = "sha256:91387ee2421f30b75f7ff632c9d48f76648e56bf346a7c805c0a34187a93aab4"},
+    {file = "watchdog-2.1.2-py3-none-manylinux2014_armv7l.whl", hash = "sha256:a6471517315a8541a943c00b45f1d252e36898a3ae963d2d52509b89a50cb2b9"},
+    {file = "watchdog-2.1.2-py3-none-manylinux2014_i686.whl", hash = "sha256:a42e6d652f820b2b94cd03156c62559a2ea68d476476dfcd77d931e7f1012d4a"},
+    {file = "watchdog-2.1.2-py3-none-manylinux2014_ppc64.whl", hash = "sha256:3d6405681471ebe0beb3aa083998c4870e48b57f8afdb45ea1b5957cc5cf1014"},
+    {file = "watchdog-2.1.2-py3-none-manylinux2014_ppc64le.whl", hash = "sha256:598d772beeaf9c98d0df946fbabf0c8365dd95ea46a250c224c725fe0c4730bc"},
+    {file = "watchdog-2.1.2-py3-none-manylinux2014_s390x.whl", hash = "sha256:4b219d46d89cfa49af1d73175487c14a318a74cb8c5442603fd13c6a5b418c86"},
+    {file = "watchdog-2.1.2-py3-none-manylinux2014_x86_64.whl", hash = "sha256:188145185c08c73c56f1478ccf1f0f0f85101191439679b35b6b100886ce0b39"},
+    {file = "watchdog-2.1.2-py3-none-win32.whl", hash = "sha256:255a32d44bbbe62e52874ff755e2eefe271b150e0ec240ad7718a62a7a7a73c4"},
+    {file = "watchdog-2.1.2-py3-none-win_amd64.whl", hash = "sha256:1a62a4671796dc93d1a7262286217d9e75823c63d4c42782912d39a506d30046"},
+    {file = "watchdog-2.1.2-py3-none-win_ia64.whl", hash = "sha256:104266a778906ae0e971368d368a65c4cd032a490a9fca5ba0b78c6c7ae11720"},
+    {file = "watchdog-2.1.2.tar.gz", hash = "sha256:0237db4d9024859bea27d0efb59fe75eef290833fd988b8ead7a879b0308c2db"},
 ]
 websocket-client = [
     {file = "websocket_client-0.58.0-py2.py3-none-any.whl", hash = "sha256:44b5df8f08c74c3d82d28100fdc81f4536809ce98a17f0757557813275fbb663"},
