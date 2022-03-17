@@ -6,7 +6,7 @@ authors = ["cpolanec <cpolanec@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "~3.8"
-boto3 = "~1.17"
+boto3 = "~1.21"
 mcrcon = "^0.6"
 parse = "^1.19"
 
